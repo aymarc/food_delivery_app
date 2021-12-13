@@ -2,6 +2,15 @@ import {Request, Response, NextFunction} from "express"
 import jwt from "jsonwebtoken";
 import {ErrorMessage, ValidationError,  AuthenticationError} from "./error";
 
+/**
+ * validation functions to validate respectively
+ * body, params, and query for a given request. 
+ * Expection a Joi.Schema using joi package. Returns an errror
+ * if validation fails. If not run the next process in the middleware
+ * chain.
+ * 
+ * Auth function to check for authentication token
+ */
 export default class Utils{
 
     bodyValidator(schemaName: any){
