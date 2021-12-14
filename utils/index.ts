@@ -1,5 +1,6 @@
 import {Request, Response, NextFunction} from "express"
 import jwt from "jsonwebtoken";
+import { createNodeRedisClient } from 'handy-redis';
 import {ErrorMessage, ValidationError,  AuthenticationError} from "./error";
 
 /**
@@ -9,10 +10,35 @@ import {ErrorMessage, ValidationError,  AuthenticationError} from "./error";
  * if validation fails. If not run the next process in the middleware
  * chain.
  * 
- * Auth function to check for authentication token
+ * Auth function to check for authentication token. Also checks for session 
+ * and determine whether user has an active session or not using Redis Store
  */
-export default class Utils{
 
+export default class Utils{
+    private client:any;
+    
+
+  
+    connectRedis(){
+        this.client = createNodeRedisClient();
+        let clientError = null;
+        this.client.nodeRedis.on('error', (err:any) => {
+            console.error("=======Redis Error====",err, "======Redis Error End======");
+            clientError = true;
+        });
+        if(!clientError){
+            console.info("=========Redis Server started==============")
+            return this.client;
+        }
+      }
+  
+    async setInRedis(key:string, value:string){
+        await this.client.set(key, value);
+    }
+    async getInRedis(key:string,){
+        const data = await this.client.set(key);
+        return data;
+    }
     bodyValidator(schemaName: any){
         if (!schemaName){        
           throw new ErrorMessage("No schema suplied to validator");
