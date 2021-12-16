@@ -1,19 +1,19 @@
 
-abstract class CustomError extends Error{
+
+export  class ValidationError extends Error{
     httpStatusCode:string = "";
-}
-
-export  class ValidationError extends CustomError{
-
     constructor(message:string){
         super(message);
         this.name = "NOT_VALID";
         this.httpStatusCode = "400";
+        Object.setPrototypeOf(this, new.target.prototype)
+        Error.captureStackTrace(this)
     }
+        
 }
 
-export  class AuthenticationError extends CustomError{
-
+export  class AuthenticationError extends Error{
+    httpStatusCode:string = "";
     constructor(message:string){
         super(message);
         this.name = "NOT_VALID";
@@ -22,39 +22,47 @@ export  class AuthenticationError extends CustomError{
 }
 
 
-export  class NotFoundError extends CustomError{
-
+export  class NotFoundError extends Error{
+    httpStatusCode:string = "";
     constructor(message:string){
         super(message);
         this.name = "NOT_FOUND";
         this.httpStatusCode = "404";
+        Object.setPrototypeOf(this, new.target.prototype)
+        Error.captureStackTrace(this)
     }
 }
 
-export  class AccessDenied extends CustomError{
-
+export  class AccessDenied extends Error{
+    httpStatusCode:string = "";
     constructor(message:string){
         super(message);
         this.name = "NOT_ALLOWED";
         this.httpStatusCode = "403";
+        Object.setPrototypeOf(this, new.target.prototype)
+        Error.captureStackTrace(this)
     }
 }
 
-export  class ExistError extends CustomError{
-
+export  class ExistError extends Error{
+    httpStatusCode:string = "";
     constructor(message:string){
         super(message);
         this.name = "ENTRY_ALREADY_EXIST";
         this.httpStatusCode = "409";
+        Object.setPrototypeOf(this, new.target.prototype)
+        Error.captureStackTrace(this)
     }
 }
 
-export  class ErrorMessage extends CustomError{
-
+export  class ErrorMessage extends Error{
+    httpStatusCode:string = "";
     constructor(message:string){
         super(message);
         this.name = "INTERNAL_SERVER_ERROR";
         this.httpStatusCode = "500";
+        Object.setPrototypeOf(this, new.target.prototype)
+        Error.captureStackTrace(this)       
     }
 }
   

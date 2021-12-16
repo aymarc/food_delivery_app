@@ -2,26 +2,34 @@ import {hashSync, compare, genSalt, hash} from "bcryptjs";
 import { DataTypes, Model } from "sequelize";
 import db from "../../utils/db";
 import Order from "../order/model";
+import jwt from "jsonwebtoken";
 
-interface userAttributes{
+
+export interface userAttributes{
     id: number;
+    name: string;
     email: string;
     streetAddress: string;
     password: string;
 }
 
-export default class User extends Model <userAttributes>{}
+export default class UserModel extends Model <userAttributes>{}
 
-User.init(
+UserModel.init(
 {
     id: {
         type: DataTypes.INTEGER,
-        primaryKey:true,
-        allowNull:false
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    name:{
+        type: DataTypes.STRING,
+        allowNull:false,
     },
     email:{
         type: DataTypes.STRING,
         allowNull:false,
+        unique:true,
     },
     streetAddress:{
         type:DataTypes.STRING,
@@ -41,7 +49,7 @@ User.init(
     tableName: "user",
 });
 
-User.hasMany(Order);
+UserModel.hasMany(Order);
 
 export const comparePassword = async (password:string,hashedPassword:string)=>{
     try{
@@ -51,3 +59,12 @@ export const comparePassword = async (password:string,hashedPassword:string)=>{
         throw error;
     }
 }
+
+const secret_key = process.env.APP_KEY as string;
+const token_validity = process.env.JWT_TOKEN_VALIDITY as string;
+export const generateToken = async (id:number, name:string) => {
+    return  jwt.sign({id, name},
+      secret_key,
+      { expiresIn: '24h'}
+    );
+  };
