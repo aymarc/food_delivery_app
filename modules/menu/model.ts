@@ -1,3 +1,4 @@
+import { object } from "joi";
 import {DataTypes, Model} from "sequelize";
 import db from  "../../utils/db";
 
@@ -30,7 +31,9 @@ Menu.init(
         },
         category:{
             type:DataTypes.ENUM,
-            allowNull:true,
+            values: Object.values(MenuCategory),
+            defaultValue:MenuCategory.MAIN,
+            
         },
         price:{
             type:DataTypes.FLOAT,

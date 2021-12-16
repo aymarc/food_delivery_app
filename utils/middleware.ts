@@ -49,12 +49,12 @@ export default class Middleware{
             }
             console.error("==================Error Start=========\n",err,
                           "==================Error End==========\n\n");
-            res.status(err.httpStatusCode || 500).json(()=>{
-                return {
-                    success:false,
-                    message:"Oops! We are so sorry; something went wrong. Kindly contact support if this persist."
-                }
-            })
+            const message = err.httpStatusCode 
+                            ? {success:false, ErrorMessage:err.message} : {
+                                success:false,
+                                ErrorMessage:"Oops! We are so sorry; something went wrong. Kindly contact support if this persist."
+                            };
+            res.status(err.httpStatusCode || 500).json(message);
         })
     }
 
